@@ -3,7 +3,7 @@ const fs = require('fs');
 const solc = require('solc');
 
 const ethereumUri = 'http://localhost:8545'; 
-
+ 
 
 let web3 = new Web3();
 web3.setProvider(new web3.providers.HttpProvider(ethereumUri));
