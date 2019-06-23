@@ -111,7 +111,7 @@ contract CrowdFunder {
         public
         inState(State.Successful)
         {
-            if(!fundRecipient.send(this.balance)) {
+            if(!owner.send(this.balance)) {
                 throw;
             }
             state = State.Closed;

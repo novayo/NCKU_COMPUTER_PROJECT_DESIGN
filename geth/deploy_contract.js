@@ -61,11 +61,11 @@ function deploy_contract(contract_Name){
     let MyContract = web3.eth.contract(abi);
     if (demo == 1) console.log('deploying contract...');
 
-    let myContractReturned = MyContract.new([], {
+    let myContractReturned = MyContract.new(500, 10, {
         from: address,
         data: '0x'+ bytecode,
         gas: gasEstimate + 50000,
-        arguments: [ 600, 10 ], //(秒, 錢)
+        // arguments: [ 600, 10 ], //(秒, 錢)
     }, function (err, myContract) {
         if (!err) {
             // NOTE: The callback will fire twice!
