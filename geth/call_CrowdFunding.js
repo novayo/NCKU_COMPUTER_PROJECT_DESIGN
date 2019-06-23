@@ -2,7 +2,7 @@ const Web3 = require('web3');
 const fs = require('fs');
 const solc = require('solc');
 
-const ethereumUri = 'http://localhost:8545'; 
+const ethereumUri = 'http://localhost:8545';  
 
 
 let web3 = new Web3();
