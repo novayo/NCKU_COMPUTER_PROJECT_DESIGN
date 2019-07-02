@@ -1,12 +1,11 @@
 const Web3 = require('web3');
 const fs = require('fs');
 const solc = require('solc');
-
 const ethereumUri = 'http://localhost:8545';  
+const demo = 0;
 
 
 
-const demo = 1;
 let web3 = new Web3();
 web3.setProvider(new web3.providers.HttpProvider(ethereumUri));
 const address0 =  web3.eth.accounts[0];// user

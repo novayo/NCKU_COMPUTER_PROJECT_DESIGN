@@ -2,7 +2,7 @@ const Web3 = require('web3');
 const fs = require('fs');
 const solc = require('solc');
 
-const demo = 1; // 0 for print nothing
+const demo = 0; // 0 for print nothing
 
 /*
  * connect to ethereum node

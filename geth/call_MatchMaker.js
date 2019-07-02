@@ -2,85 +2,91 @@ const Web3 = require('web3');
 const fs = require('fs');
 const solc = require('solc');
 const ethereumUri = 'http://localhost:8545';
+const demo = 0;
 
-
-const demo = 1;
+var addr = "0x1a03c26f81cd0f301e57d2bc8beae777f0d9fc5b";
 var web3 = new Web3();
 web3.setProvider(new web3.providers.HttpProvider(ethereumUri));
 const address0 = web3.eth.accounts[0];// user
-  if (!web3.isConnected()) {
-    throw new Error('unable to connect to ethereum node at ' + ethereumUri);
-  } else {
-    let coinbase = web3.eth.coinbase;
-    if (demo == 1) console.log('coinbase:' + coinbase);
-    let balance = web3.eth.getBalance(coinbase);
-    if (demo == 1) console.log('balance:' + web3.fromWei(balance, 'ether') + " ETH");
-    let accounts = web3.eth.accounts;
-    if (demo == 1) console.log(accounts);
+if (!web3.isConnected()) {
+  throw new Error('unable to connect to ethereum node at ' + ethereumUri);
+} else {
+  let coinbase = web3.eth.coinbase;
+  if (demo == 1) console.log('coinbase:' + coinbase);
+  let balance = web3.eth.getBalance(coinbase);
+  if (demo == 1) console.log('balance:' + web3.fromWei(balance, 'ether') + " ETH");
+  let accounts = web3.eth.accounts;
+  if (demo == 1) console.log(accounts);
 
-    if (web3.personal.unlockAccount(address0, '1')) {
-      if (demo == 1) console.log(`${address0} is unlocaked`);
-    } else {
-      if (demo == 1) console.log(`unlock failed, ${address0}`);
-    }
+  if (web3.personal.unlockAccount(address0, '1')) {
+    if (demo == 1) console.log(`${address0} is unlocaked`);
+  } else {
+    if (demo == 1) console.log(`unlock failed, ${address0}`);
   }
+}
 
 
 
 
 /*********************************************************/
-showAllInfo();
+// showAllInfo();
 // test();
-// var matchResult = make_a_match();
-// console.log(matchResult);
+console.log(_make_a_match());
 /*********************************************************/
 
 
 
 function addUser(User_ID, User_Name, User_TotalAmount, User_Interest, User_CreditRating) {
   // update this value in order to do something to aimmed contract
-  var value = getContractInfo("0xfe0602983dae29f89b447c4e870c6099d8d313bc");
+  var value = getContractInfo(addr);
   value[0].addUserInContract(User_ID, User_Name, User_TotalAmount, User_Interest, User_CreditRating.charCodeAt(0), { from: address0, gas: value[1] });
 }
 
-function make_a_match() {
+function _make_a_match() {
   // update this value in order to do something to aimmed contract
-  var value = getContractInfo("0xfe0602983dae29f89b447c4e870c6099d8d313bc");
+  var value = getContractInfo(addr);
+  // console.log(value);
   var result = value[0].make_a_match();
-  return result;
+  var data = parseString(result);
+  console.log(value[0].getIsend());
+  console.log(value[0].getStatus());
+  return data;
+  // [資料]
+  // [[第n筆資料]]
+  // [[[貸款人, 借款人]]]
 }
 
-function showAllInfo(){
-  var value = getContractInfo("0xfe0602983dae29f89b447c4e870c6099d8d313bc");
+function showAllInfo() {
+  var value = getContractInfo(addr);
   console.log(value[0].showAllInfo());
 }
 
 
 
 
-function test(){
-  addUser('INVESTOR', address0, 260000, 11, "A");
-  addUser('INVESTOR', address0, 220000, 22, "B");
-  addUser('INVESTOR', address0, 700000, 33, "C");
-  addUser('INVESTOR', address0, 250000, 11, "D");
-  addUser('INVESTOR', address0, 1, 11, "A");
-  addUser('INVESTOR', address0, 1, 11, "A");
-  addUser('INVESTOR', address0, 1, 11, "A");
+function test() {
+  addUser('INVESTOR', "施崇祐", 260000, 11, "A");
+  addUser('INVESTOR', "陳姿妤", 220000, 22, "B");
+  addUser('INVESTOR', "李昱廷", 700000, 33, "B");
+  addUser('INVESTOR', "蔡英文", 250000, 11, "B");
+  addUser('INVESTOR', "馬英九", 1, 11, "B");
+  addUser('INVESTOR', "小紅帽", 1, 11, "C");
+  addUser('INVESTOR', "艾希", 1, 11, "B");
 
-  addUser('BORROWER', address0, 200000, 11, "B");
-  addUser('BORROWER', address0, 500000, 11, "B");
-// MyContract.addUserInContract('INVESTOR',address0, 260000, 11,{from: address0, gas: 300000 + gasEstimate});
-// MyContract.addUserInContract('INVESTOR',address0, 220000, 22,{from: address0, gas: 300000 + gasEstimate});
-// MyContract.addUserInContract('INVESTOR',address0, 700000, 33,{from: address0, gas: 300000 + gasEstimate});
-// MyContract.addUserInContract('INVESTOR',address0, 250000, 11,{from: address0, gas: 300000 + gasEstimate});
-// MyContract.addUserInContract('INVESTOR',address0, 1, 11,{from: address0, gas: 300000 + gasEstimate});
-// MyContract.addUserInContract('INVESTOR',address0, 1, 11,{from: address0, gas: 300000 + gasEstimate});
-// MyContract.addUserInContract('INVESTOR',address0, 1, 11,{from: address0, gas: 300000 + gasEstimate});
+  addUser('BORROWER', "法洛士", 200000, 11, "A");
+  addUser('BORROWER', "咸蛋超人", 500000, 11, "A");
+  // MyContract.addUserInContract('INVESTOR',address0, 260000, 11,{from: address0, gas: 300000 + gasEstimate});
+  // MyContract.addUserInContract('INVESTOR',address0, 220000, 22,{from: address0, gas: 300000 + gasEstimate});
+  // MyContract.addUserInContract('INVESTOR',address0, 700000, 33,{from: address0, gas: 300000 + gasEstimate});
+  // MyContract.addUserInContract('INVESTOR',address0, 250000, 11,{from: address0, gas: 300000 + gasEstimate});
+  // MyContract.addUserInContract('INVESTOR',address0, 1, 11,{from: address0, gas: 300000 + gasEstimate});
+  // MyContract.addUserInContract('INVESTOR',address0, 1, 11,{from: address0, gas: 300000 + gasEstimate});
+  // MyContract.addUserInContract('INVESTOR',address0, 1, 11,{from: address0, gas: 300000 + gasEstimate});
 
 
-// // MyContract.addUserInContract('BORROWER',address0, 500000, 33,{from: address0, gas: 300000 + gasEstimate});
-// MyContract.addUserInContract('BORROWER',address0, 200000, 11,{from: address0, gas: 300000 + gasEstimate});
-// MyContract.addUserInContract('BORROWER',address0, 500000, 11,{from: address0, gas: 300000 + gasEstimate});
+  // // MyContract.addUserInContract('BORROWER',address0, 500000, 33,{from: address0, gas: 300000 + gasEstimate});
+  // MyContract.addUserInContract('BORROWER',address0, 200000, 11,{from: address0, gas: 300000 + gasEstimate});
+  // MyContract.addUserInContract('BORROWER',address0, 500000, 11,{from: address0, gas: 300000 + gasEstimate});
 }
 
 
@@ -106,6 +112,22 @@ function getContractInfo(Contract_Address) {
   return [contract, gasestimate];
 }
 
+function parseString(result) {
+  var data = [];
+  var tmp = result.split("|");
+  tmp = tmp.slice(1);
+  for (let index in tmp) {
+    var tmpData = [];
+    var ttmp = tmp[index].split(",");
+    for (let j in ttmp) {
+      var tttmp = ttmp[j].split("&");
+      tttmp[4] = String.fromCharCode(tttmp[4]);
+      tmpData.push(tttmp);
+    }
+    data.push(tmpData);
+  }
+  return data;
+}
 
 
 
