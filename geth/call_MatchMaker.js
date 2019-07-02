@@ -25,8 +25,6 @@ const address0 = web3.eth.accounts[0];// user
     }
   }
 
-// update this value in order to do something to aimmed contract
-var value = getContractInfo("0xe5ed35cec2b880085f265c4be3cac116d2ecf3a8");
 
 
 
@@ -40,10 +38,14 @@ test();
 
 
 function addUser(User_ID, User_Name, User_TotalAmount, User_Interest, User_CreditRating) {
+  // update this value in order to do something to aimmed contract
+  var value = getContractInfo("0xe5ed35cec2b880085f265c4be3cac116d2ecf3a8");
   value[0].addUserInContract(User_ID, User_Name, User_TotalAmount, User_Interest, User_CreditRating, { from: address0, gas: value[1] });
 }
 
 function make_a_match() {
+  // update this value in order to do something to aimmed contract
+  var value = getContractInfo("0xe5ed35cec2b880085f265c4be3cac116d2ecf3a8");
   var result = value[0].make_a_match();
   return result;
 }
