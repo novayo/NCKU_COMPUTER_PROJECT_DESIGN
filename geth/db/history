@@ -1,0 +1,12 @@
+
+account
+eth.accounts
+eth.coinbase
+miner.setEtherbase(eth.accounts[0])
+eth.coinbase
+balance = web3.fromWei(eth.getBalance(eth.accounts[0]), "ether")
+eth.coinbase
+balance = web3.fromWei(eth.getBalance(eth.accounts[0]), "ether")
+eth.coinbase
+balance = web3.fromWei(eth.getBalance(eth.accounts[0]), "ether")
+ecit

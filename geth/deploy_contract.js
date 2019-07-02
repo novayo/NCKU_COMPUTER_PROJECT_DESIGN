@@ -10,9 +10,9 @@ const demo = 1; // 0 for print nothing
 const ethereumUri = 'http://localhost:8545';
 
 
-let web3 = new Web3();
+var web3 = new Web3();
 web3.setProvider(new web3.providers.HttpProvider(ethereumUri));
-const address = web3.eth.accounts[0]; // user
+const account0 = web3.eth.accounts[0]; // user
 if(!web3.isConnected()){
     throw new Error('unable to connect to ethereum node at ' + ethereumUri);
 }else{
@@ -24,17 +24,17 @@ if(!web3.isConnected()){
     let accounts = web3.eth.accounts;
     if (demo == 1) console.log(accounts);
     
-    if (web3.personal.unlockAccount(address, '1')) {
-        if (demo == 1) console.log(`${address} is unlocaked`);
+    if (web3.personal.unlockAccount(account0, '1')) {
+        if (demo == 1) console.log(`${account0} is unlocaked`);
     }else{
-        if (demo == 1) console.log(`unlock failed, ${address}`);
+        if (demo == 1) console.log(`unlock failed, ${account0}`);
     }
 }
 
 /*
 * Compile Contract and Fetch ABI
 */ 
-function deploy_contract(contract_Name){
+function deploy_contract(contract_Name, duration, index, callback){
     let name = contract_Name;
     let source = fs.readFileSync("./contracts/" + name, 'utf8');
 
@@ -61,11 +61,11 @@ function deploy_contract(contract_Name){
     let MyContract = web3.eth.contract(abi);
     if (demo == 1) console.log('deploying contract...');
 
-    let myContractReturned = MyContract.new([], {
-        from: address,
+    //(秒, 錢)
+    let myContractReturned = MyContract.new(duration, index, {
+        from: account0,
         data: '0x'+ bytecode,
         gas: gasEstimate + 50000,
-        arguments: [ 600, 10 ], //(秒, 錢)
     }, function (err, myContract) {
         if (!err) {
             // NOTE: The callback will fire twice!
@@ -73,18 +73,13 @@ function deploy_contract(contract_Name){
 
             // e.g. check tx hash on the first call (transaction send)
             if (!myContract.address) {
-                // if (demo == 1) console.log(`myContract.transactionHash = ${myContract.transactionHash}`); // The hash of the transaction, which deploys the contract
+                if (demo == 1) console.log(`myContract.transactionHash = ${myContract.transactionHash}`); // The hash of the transaction, which deploys the contract
             
             // check address on the second call (contract deployed)
             } else {
-                // if (demo == 1) console.log('myContract.address = ' + myContract.address); // the contract address
                 global.contractAddress = myContract.address;
-
-                /*
-                * Return ADDRESS to MySql
-                */
-                let ADDRESS = myContract.address;
-                if (demo == 1) console.log('myContract.address = ' + ADDRESS);
+                if (demo == 1) console.log('myContract.address = ' + myContract.address);
+                callback(myContract.address); // http://larry850806.github.io/2016/06/16/nodejs-async/
             }
                 
 
@@ -94,7 +89,22 @@ function deploy_contract(contract_Name){
                 if (demo == 1) console.log(err);
         }
     });
+
+    return myContractReturned;
 }
 
-// deploy_contract("HelloWorld.sol");
-deploy_contract("CrowdFunding.sol");
+function deploy_matchmaker_contract(_duration, _kindOfContract){
+    deploy_contract("MatchMaker.sol", _duration, _kindOfContract, function(RETURN_ADDRESS){
+        /*
+         * Return ADDRESS to MySql
+         */
+         console.log(RETURN_ADDRESS);
+    });
+}
+
+function deploy_crowdfunding_contract(_duration, _totalAmount){
+    deploy_contract("CrowdFunding.sol", _duration, _totalAmount);
+}
+
+deploy_matchmaker_contract(600, "INVESTOR");
+// deploy_crowdfunding_contract(600, 10000);
