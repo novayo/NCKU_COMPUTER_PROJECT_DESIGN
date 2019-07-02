@@ -7,8 +7,25 @@ const gasEstimate = value[1];
 
 
 const demo = 1;
-const address0 =  getAccountInfo[0];// user
-const value = getContractInfo("0xce51f0c98ae9c32509b253e1f5832acc2564822c"); 
+let web3 = new Web3();
+web3.setProvider(new web3.providers.HttpProvider(ethereumUri));
+const address0 =  web3.eth.accounts[0];// user
+if (!web3.isConnected()) {
+  throw new Error('unable to connect to ethereum node at ' + ethereumUri);
+} else {
+  let coinbase = web3.eth.coinbase;
+  if (demo == 1) console.log('coinbase:' + coinbase);
+  let balance = web3.eth.getBalance(coinbase);
+  if (demo == 1) console.log('balance:' + web3.fromWei(balance, 'ether') + " ETH");
+  let accounts = web3.eth.accounts;
+  if (demo == 1) console.log(accounts);
+
+  if (web3.personal.unlockAccount(address0, '1')) {
+    if (demo == 1) console.log(`${address0} is unlocaked`);
+  } else {
+    if (demo == 1) console.log(`unlock failed, ${address0}`);
+  }
+}
 
 /*********************************************************/
 fund(7);
@@ -17,7 +34,8 @@ fund(7);
 
 
 function fund(_fundMoney){
-  MyContract.fund({from: address0, gas: gasEstimate, value: _fundMoney});
+  var value = getContractInfo("0xce51f0c98ae9c32509b253e1f5832acc2564822c"); 
+  value[0].fund({from: address0, gas: value[1], value: _fundMoney});
 }
 
 
@@ -26,29 +44,7 @@ function fund(_fundMoney){
 /*********************************************************/
 /********************      Utils      ********************/
 /*********************************************************/
-function getAccountInfo(_whichAccount){
-  let web3 = new Web3();
-  web3.setProvider(new web3.providers.HttpProvider(ethereumUri));
-  return web3.eth.accounts[_whichAccount];
-}
-
 function getContractInfo(Contract_Address) {
-  if (!web3.isConnected()) {
-    throw new Error('unable to connect to ethereum node at ' + ethereumUri);
-  } else {
-    let coinbase = web3.eth.coinbase;
-    if (demo == 1) console.log('coinbase:' + coinbase);
-    let balance = web3.eth.getBalance(coinbase);
-    if (demo == 1) console.log('balance:' + web3.fromWei(balance, 'ether') + " ETH");
-    let accounts = web3.eth.accounts;
-    if (demo == 1) console.log(accounts);
-
-    if (web3.personal.unlockAccount(address0, '1')) {
-      if (demo == 1) console.log(`${address0} is unlocaked`);
-    } else {
-      if (demo == 1) console.log(`unlock failed, ${address0}`);
-    }
-  }
   let source = fs.readFileSync("./contracts/CrowdFunding.sol", 'utf8');
   if (demo == 1) console.log('compiling contract...');
   let compiledContract = solc.compile(source);

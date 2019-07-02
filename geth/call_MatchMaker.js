@@ -29,8 +29,8 @@ const address0 = web3.eth.accounts[0];// user
 
 
 /*********************************************************/
-// console.log(value[0].showAllInfo());
-test();
+showAllInfo();
+// test();
 // var matchResult = make_a_match();
 // console.log(matchResult);
 /*********************************************************/
@@ -39,18 +39,21 @@ test();
 
 function addUser(User_ID, User_Name, User_TotalAmount, User_Interest, User_CreditRating) {
   // update this value in order to do something to aimmed contract
-  var value = getContractInfo("0xe5ed35cec2b880085f265c4be3cac116d2ecf3a8");
-  value[0].addUserInContract(User_ID, User_Name, User_TotalAmount, User_Interest, User_CreditRating, { from: address0, gas: value[1] });
+  var value = getContractInfo("0xfe0602983dae29f89b447c4e870c6099d8d313bc");
+  value[0].addUserInContract(User_ID, User_Name, User_TotalAmount, User_Interest, User_CreditRating.charCodeAt(0), { from: address0, gas: value[1] });
 }
 
 function make_a_match() {
   // update this value in order to do something to aimmed contract
-  var value = getContractInfo("0xe5ed35cec2b880085f265c4be3cac116d2ecf3a8");
+  var value = getContractInfo("0xfe0602983dae29f89b447c4e870c6099d8d313bc");
   var result = value[0].make_a_match();
   return result;
 }
 
-
+function showAllInfo(){
+  var value = getContractInfo("0xfe0602983dae29f89b447c4e870c6099d8d313bc");
+  console.log(value[0].showAllInfo());
+}
 
 
 
