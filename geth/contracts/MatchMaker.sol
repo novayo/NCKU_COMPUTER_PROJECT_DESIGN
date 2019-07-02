@@ -35,14 +35,13 @@ contract MatchMaker {
 	mapping (uint => Borrower) private borrowers; // 管理投資家的對應表（map）
 
 	modifier aLive () {
-		if (!ISEND) {
-			//checkGoalReached();
-			_;
-		}
+		checkGoalReached();
+		if (!ISEND) _;
+		checkGoalReached();
 	}
 
 	/// 建構子 (秒, 錢)
-	constructor (string _kindOfConteact, uint _duration) {
+	constructor (uint _duration, string _kindOfConteact) {
 		kindOfConteact = _kindOfConteact;
 		DEADLINE = now + _duration; // 用Unixtime設定截止日期
 		status = STATUS.WAITING;
@@ -69,55 +68,89 @@ contract MatchMaker {
 		}
 	}
 
-	function test() public returns(string){
-		// sortFromBigToSmall();
+	uint[] empty;
+	uint[] startIndex_for_borrowers;
+	/*************************  信用評價還沒加 *************************/
+	function make_a_match() public view returns(string){
+		status = STATUS.DOING_MATCH;
+		string memory Info = "";
+		sortedUsers(true, true); // 依照利率由高到低排序好投資方跟借錢人
+		checkEqualAmount(); // 比較相等的金錢的雙方
+		Info = concatString(Info, "\n\n");
+		Info = concatString(Info, showAllInfo());
+		updateCluster();
+		for (uint i = 0; i<numBorrowers; i++){
+			Info = concatString(Info, convertIntToString(startIndex_for_borrowers[i]));
+			Info = concatString(Info, " ");
+			if (startIndex_for_borrowers[i] == 99) continue;
+			uint startIndex = startIndex_for_borrowers[i];
+			for (uint j = startIndex; j<numInvestors; j++){
+				if (borrowers[i].restAmount == 0 || investors[j].restAmount == 0) break; // 若borrower的錢給完了，或是investor的錢都歸0了
+				if (investors[j].restAmount > borrowers[i].restAmount){ // case 1：要求的利率下，investor的錢比borrower的多
+					investors[j].restAmount -= borrowers[i].restAmount;
+					borrowers[i].restAmount = 0;
+					borrowers[i].interest = 0;
+					Info = concatString(Info, "\n");
+					Info = addInTransactionRecord(Info, i, j);
+				} else if (investors[j].restAmount == borrowers[i].restAmount){ // case 3：要求的利率下，investor的錢 == borrower的錢
+					investors[j].restAmount = 0;
+					investors[j].interest = 0;
+					borrowers[i].restAmount = 0;
+					borrowers[i].interest = 0;
+					Info = concatString(Info, "\n");
+					Info = addInTransactionRecord(Info, i, j);
+				} else { // case 3：要求的利率下，investor的錢 < borrower的錢
+					borrowers[i].restAmount -= investors[j].restAmount;
+					investors[j].restAmount = 0;
+					investors[j].interest = 0;
+					Info = concatString(Info, "\n");
+					Info = addInTransactionRecord(Info, i, j);
+				}
+			}
+			Info = concatString(Info, "\n");
+			sortedUsers(true, false); // sort investor
+			updateCluster();
+		}
+
+		sortedUsers(true, true); // sort investor
+		Info = concatString(Info, "\n\n");
+		Info = concatString(Info, showAllInfo());
+    	return Info;
 	}
 
-	/// 投資時會被呼叫的函數
-	// function fund() payable {
-	// 	// 若是活動已結束的話就中斷處理
-	// 	checkGoalReached();
-	// 	if (!ISEND){
-	// 		Investor inv = investors[numInvestors++];
-	// 		inv.addr = msg.sender;
-	// 		inv.totalAmount = msg.value;
-	// 		totalAmount += inv.totalAmount;
-    //         if (totalAmount >= goalAmount){
-    //             totalAmount = goalAmount;
-    //             checkGoalReached();
-    //         }
-	// 	}
+	function addInTransactionRecord(string input, uint indexBorrower, uint indexInvestor) private view returns(string){
+		string memory newRecord = concatString(input, convertIntToString(borrowers[indexBorrower].restAmount));
+		newRecord = concatString(newRecord, " - ");
+		newRecord = concatString(newRecord, convertIntToString(investors[indexInvestor].restAmount));
+		newRecord = concatString(newRecord, "\n");
+		return newRecord;
+	}
+
+	/// 確認是否已達成目標金額
+	/// 此外，根據活動的成功於否進行ether的匯款
+	function checkGoalReached () private{
+		if (!ISEND || now >= DEADLINE){
+			if (now >= DEADLINE && status == STATUS.WAITING){
+				status = STATUS.FAILED;
+				ISEND = true;
+			} if(status == STATUS.DOING_MATCH) { // 活動成功的時候
+				status = STATUS.SUCCESS;
+				ISEND = true;
+			} else if (status == STATUS.FAILED){
+				ISEND = true;
+			}
+		}
+	}
+
+	// function test() public returns(string){
+	// 	// sortFromBigToSmall();
 	// }
 
-	// /// 確認是否已達成目標金額
-	// /// 此外，根據活動的成功於否進行ether的匯款
-	// function checkGoalReached () private{
-	// 	if (!ISEND || now >= DEADLINE){
-	// 		if(totalAmount >= goalAmount) { // 活動成功的時候
-	// 			status = "Campaign Succeeded";
-	// 			ISEND = true;
-	// 			// 將合約內所有以太幣（ether）傳送給所有人
-	// 			// if(!owner.send(this.balance)) {
-	// 			// 	throw;
-	// 			// }
-	// 		}
-	// 		else { // 活動失敗的時候
-	// 			if (now >= DEADLINE){
-	// 				uint i = 0;
-	// 				status = "Campaign Failed";
-	// 				ISEND = true;
-	// 				// 將ether退款給每位投資家
-	// 				// while(i <= numInvestors) {
-	// 				// 	if(!investors[i].addr.send(investors[i].amount)) {
-	// 				// 		throw;
-	// 				// 	}
-	// 				//     i++;
-	// 				//     }
-	// 			}
-	// 		}
-	// 	}
-	// }
 
+
+	/*********************************************************/
+	/****************** Getters and Setters ******************/
+	/*********************************************************/
 	function showAllInfo() public view returns(string) {
 		string memory Info = "";
 		Info = concatString(Info, "\nINVESTORS : \n");
@@ -175,6 +208,11 @@ contract MatchMaker {
 		return ISEND;
 	}
 
+
+
+	/*********************************************************/
+	/********************      Utils      ********************/
+	/*********************************************************/
 	function concatString(string a, string b) private pure returns (string) {
     	return string(abi.encodePacked(a, b));
 	}
@@ -207,59 +245,6 @@ contract MatchMaker {
 		}
 
 		return string(bstr);
-	}
-
-
-
-
-	uint[] empty;
-	uint[] startIndex_for_borrowers;
-	/*************************  信用評價還沒加 *************************/
-	function make_a_match() public view returns(string){
-		string memory Info = "";
-		sortedUsers(true, true); // 依照利率由高到低排序好投資方跟借錢人
-		checkEqualAmount(); // 比較相等的金錢的雙方
-		Info = concatString(Info, "\n\n");
-		Info = concatString(Info, showAllInfo());
-		updateCluster();
-		for (uint i = 0; i<numBorrowers; i++){
-			Info = concatString(Info, convertIntToString(startIndex_for_borrowers[i]));
-			Info = concatString(Info, " ");
-			if (startIndex_for_borrowers[i] == 99) continue;
-			uint startIndex = startIndex_for_borrowers[i];
-			for (uint j = startIndex; j<numInvestors; j++){
-				if (borrowers[i].restAmount == 0 || investors[j].restAmount == 0) break; // 若borrower的錢給完了，或是investor的錢都歸0了
-				if (investors[j].restAmount > borrowers[i].restAmount){ // case 1：要求的利率下，investor的錢比borrower的多
-					investors[j].restAmount -= borrowers[i].restAmount;
-					borrowers[i].restAmount = 0;
-					borrowers[i].interest = 0;
-					Info = concatString(Info, "\n");
-					Info = addInTransactionRecord(Info, i, j);
-				} else if (investors[j].restAmount == borrowers[i].restAmount){ // case 3：要求的利率下，investor的錢 == borrower的錢
-					investors[j].restAmount = 0;
-					investors[j].interest = 0;
-					borrowers[i].restAmount = 0;
-					borrowers[i].interest = 0;
-					Info = concatString(Info, "\n");
-					Info = addInTransactionRecord(Info, i, j);
-				} else { // case 3：要求的利率下，investor的錢 < borrower的錢
-					borrowers[i].restAmount -= investors[j].restAmount;
-					investors[j].restAmount = 0;
-					investors[j].interest = 0;
-					Info = concatString(Info, "\n");
-					Info = addInTransactionRecord(Info, i, j);
-				}
-			}
-			Info = concatString(Info, "\n");
-			sortedUsers(true, false); // sort investor
-			updateCluster();
-		}
-
-
-		sortedUsers(true, true); // sort investor
-		Info = concatString(Info, "\n\n");
-		Info = concatString(Info, showAllInfo());
-    	return Info;
 	}
 
 	uint[] arr;	// 要寫在外面，寫在function內會出錯==
@@ -396,14 +381,6 @@ contract MatchMaker {
 				startIndex_for_borrowers.push(99);
 			}
 		}
-	}
-
-	function addInTransactionRecord(string input, uint indexBorrower, uint indexInvestor) private view returns(string){
-		string memory newRecord = concatString(input, convertIntToString(borrowers[indexBorrower].restAmount));
-		newRecord = concatString(newRecord, " - ");
-		newRecord = concatString(newRecord, convertIntToString(investors[indexInvestor].restAmount));
-		newRecord = concatString(newRecord, "\n");
-		return newRecord;
 	}
 
 }

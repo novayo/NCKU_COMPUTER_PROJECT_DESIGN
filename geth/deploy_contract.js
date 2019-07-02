@@ -34,7 +34,7 @@ if(!web3.isConnected()){
 /*
 * Compile Contract and Fetch ABI
 */ 
-function deploy_contract(contract_Name, callback){
+function deploy_contract(contract_Name, duration, index, callback){
     let name = contract_Name;
     let source = fs.readFileSync("./contracts/" + name, 'utf8');
 
@@ -62,7 +62,7 @@ function deploy_contract(contract_Name, callback){
     if (demo == 1) console.log('deploying contract...');
 
     //(秒, 錢)
-    let myContractReturned = MyContract.new("INVESTOR", 600, {
+    let myContractReturned = MyContract.new(duration, index, {
         from: account0,
         data: '0x'+ bytecode,
         gas: gasEstimate + 50000,
@@ -93,9 +93,18 @@ function deploy_contract(contract_Name, callback){
     return myContractReturned;
 }
 
-deploy_contract("MatchMaker.sol", function(RETURN_ADDRESS){
-    /*
-     * Return ADDRESS to MySql
-     */
-     console.log(RETURN_ADDRESS);
-});
+function deploy_matchmaker_contract(_duration, _kindOfContract){
+    deploy_contract("MatchMaker.sol", _duration, _kindOfContract, function(RETURN_ADDRESS){
+        /*
+         * Return ADDRESS to MySql
+         */
+         console.log(RETURN_ADDRESS);
+    });
+}
+
+function deploy_crowdfunding_contract(_duration, _totalAmount){
+    deploy_contract("CrowdFunding.sol", _duration, _totalAmount);
+}
+
+deploy_matchmaker_contract(1, "INVESTOR");
+// deploy_crowdfunding_contract(600, 10000);

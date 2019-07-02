@@ -2,24 +2,23 @@ const Web3 = require('web3');
 const fs = require('fs');
 const solc = require('solc');
 const ethereumUri = 'http://localhost:8545';
-const demo = 1;
-
-let web3 = new Web3();
-web3.setProvider(new web3.providers.HttpProvider(ethereumUri));
-const address0 = web3.eth.accounts[0]; // user
-
-
-
-const value = getContractInfo("0x37c4eecd4bc45fd65a339061cc06f88696a1d3f1");
 const MyContract = value[0];
 const gasEstimate = value[1];
 
 
+const demo = 1;
+const address0 =  getAccountInfo[0];// user
+const value = getContractInfo("0xce51f0c98ae9c32509b253e1f5832acc2564822c");
 
-// console.log(MyContract.showAllInfo());
+
+/*********************************************************/
+console.log(MyContract.showAllInfo());
 // test();
-var matchResult = make_a_match();
-console.log(matchResult);
+// var matchResult = make_a_match();
+// console.log(matchResult);
+/*********************************************************/
+
+
 
 function addUser(User_ID, User_Address, User_TotalAmount, User_Interest, User_CreditRating) {
   MyContract.addUserInContract(User_ID, User_Address, User_TotalAmount, User_Interest, User_CreditRating, { from: address0, gas: gasEstimate });
@@ -29,7 +28,6 @@ function make_a_match() {
   var result = MyContract.make_a_match();
   return result;
 }
-
 
 function test(){
   addUser('INVESTOR', address0, 260000, 11, 3);
@@ -58,6 +56,15 @@ function test(){
 
 
 
+/*********************************************************/
+/********************      Utils      ********************/
+/*********************************************************/
+function getAccountInfo(_whichAccount){
+  let web3 = new Web3();
+  web3.setProvider(new web3.providers.HttpProvider(ethereumUri));
+  return web3.eth.accounts[_whichAccount];
+}
+
 function getContractInfo(Contract_Address) {
   if (!web3.isConnected()) {
     throw new Error('unable to connect to ethereum node at ' + ethereumUri);
@@ -74,7 +81,6 @@ function getContractInfo(Contract_Address) {
     } else {
       if (demo == 1) console.log(`unlock failed, ${address0}`);
     }
-
   }
   let source = fs.readFileSync("./contracts/MatchMaker.sol", 'utf8');
   if (demo == 1) console.log('compiling contract...');

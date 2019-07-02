@@ -19,14 +19,13 @@ contract CrowdFunding {
 	mapping (uint => Investor) public investors; // 管理投資家的對應表（map）
 
 	modifier aLive () {
-		if (!ISEND) {
-			_;
-			checkGoalReached();
-		}
+		checkGoalReached();
+		if (!ISEND) _;
+		checkGoalReached();
 	}
 
 	/// 建構子 (秒, )
-	function CrowdFunding(uint _duration, uint _goalAmount) {
+	constructor (uint _duration, uint _goalAmount) {
 		owner = msg.sender;
 		// 用Unixtime設定截止日期
 		DEADLINE = now + _duration;
@@ -37,7 +36,7 @@ contract CrowdFunding {
 		totalAmount = 0;
 	}
 	/// 投資時會被呼叫的函數
-	function fund() payable public aLive{
+	function fund() public payable aLive{
 		// 若是活動已結束的話就中斷處理
 		if (!ISEND){
 			Investor inv = investors[numInvestors++];
@@ -53,52 +52,37 @@ contract CrowdFunding {
 			if(totalAmount >= goalAmount) { // 活動成功的時候
 				status = STATUS.SUCCESS;
 				ISEND = true;
-				// 將合約內所有以太幣（ether）傳送給所有人
-				// if(!owner.send(this.balance)) {
-				// 	throw;
-				// }
-			} 
-			
+			}
 			else { // 活動失敗的時候
 				if (now >= DEADLINE){
-				// uint i = 0;
-				status = STATUS.FAILED;
-				ISEND = true;
-				// 將ether退款給每位投資家
-				// while(i <= numInvestors) {
-				// 	if(!investors[i].addr.send(investors[i].amount)) {
-				// 		throw;
-				// 	}
-				// i++;
-				// }
+					status = STATUS.FAILED;
+					ISEND = true;
 				}
 			}
 		}
 	}
 
-	function getNow() constant public returns(uint) {
+
+
+	/*********************************************************/
+	/****************** Getters and Setters ******************/
+	/*********************************************************/
+	function getNow() public view returns(uint) {
 		return now;
 	}
 
-	function getStatus() constant public returns(string) {
+	function getStatus() public view returns(string) {
 		if (status == STATUS.FUNDING){
 			return "Funding";
 		} else if (status == STATUS.SUCCESS){
 			return "Success";
 		} else if (status == STATUS.FAILED){
 			return "Failed";
-		} 
+		}
 	}
 
-	function getGoalAmountn() constant public returns(uint) {
+	function getGoalAmountn() public view returns(uint) {
 		return goalAmount;
 	}
-
-    /*
-	/// 為了銷毀合約的函數
-	function kill() public onlyOwner {
-		selfdestruct(owner);
-	}
-    */
 }
 
