@@ -176,3 +176,5 @@
 20:00:47.015901 table@compaction committed F-1 S-29KiB Ke·0 D·593 T·22.809925ms
 20:00:47.016049 table@remove removed @37
 20:00:47.016474 table@remove removed @36
+20:42:31.094111 db@close closing
+20:42:31.094306 db@close done T·190.46µs
