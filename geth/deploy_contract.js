@@ -10,7 +10,7 @@ const demo = 1; // 0 for print nothing
 const ethereumUri = 'http://localhost:8545';
 
 
-let web3 = new Web3();
+var web3 = new Web3();
 web3.setProvider(new web3.providers.HttpProvider(ethereumUri));
 const account0 = web3.eth.accounts[0]; // user
 if(!web3.isConnected()){
@@ -106,5 +106,5 @@ function deploy_crowdfunding_contract(_duration, _totalAmount){
     deploy_contract("CrowdFunding.sol", _duration, _totalAmount);
 }
 
-deploy_matchmaker_contract(1, "INVESTOR");
+deploy_matchmaker_contract(600, "INVESTOR");
 // deploy_crowdfunding_contract(600, 10000);

@@ -2,44 +2,68 @@ const Web3 = require('web3');
 const fs = require('fs');
 const solc = require('solc');
 const ethereumUri = 'http://localhost:8545';
-const MyContract = value[0];
-const gasEstimate = value[1];
 
 
 const demo = 1;
-const address0 =  getAccountInfo[0];// user
-const value = getContractInfo("0xce51f0c98ae9c32509b253e1f5832acc2564822c");
+var web3 = new Web3();
+web3.setProvider(new web3.providers.HttpProvider(ethereumUri));
+const address0 = web3.eth.accounts[0];// user
+  if (!web3.isConnected()) {
+    throw new Error('unable to connect to ethereum node at ' + ethereumUri);
+  } else {
+    let coinbase = web3.eth.coinbase;
+    if (demo == 1) console.log('coinbase:' + coinbase);
+    let balance = web3.eth.getBalance(coinbase);
+    if (demo == 1) console.log('balance:' + web3.fromWei(balance, 'ether') + " ETH");
+    let accounts = web3.eth.accounts;
+    if (demo == 1) console.log(accounts);
+
+    if (web3.personal.unlockAccount(address0, '1')) {
+      if (demo == 1) console.log(`${address0} is unlocaked`);
+    } else {
+      if (demo == 1) console.log(`unlock failed, ${address0}`);
+    }
+  }
+
+// update this value in order to do something to aimmed contract
+var value = getContractInfo("0xe5ed35cec2b880085f265c4be3cac116d2ecf3a8");
+
 
 
 /*********************************************************/
-console.log(MyContract.showAllInfo());
-// test();
+// console.log(value[0].showAllInfo());
+test();
 // var matchResult = make_a_match();
 // console.log(matchResult);
 /*********************************************************/
 
 
 
-function addUser(User_ID, User_Address, User_TotalAmount, User_Interest, User_CreditRating) {
-  MyContract.addUserInContract(User_ID, User_Address, User_TotalAmount, User_Interest, User_CreditRating, { from: address0, gas: gasEstimate });
+function addUser(User_ID, User_Name, User_TotalAmount, User_Interest, User_CreditRating) {
+  value[0].addUserInContract(User_ID, User_Name, User_TotalAmount, User_Interest, User_CreditRating, { from: address0, gas: value[1] });
 }
 
 function make_a_match() {
-  var result = MyContract.make_a_match();
+  var result = value[0].make_a_match();
   return result;
 }
 
-function test(){
-  addUser('INVESTOR', address0, 260000, 11, 3);
-  addUser('INVESTOR', address0, 220000, 22, 3);
-  addUser('INVESTOR', address0, 700000, 33, 3);
-  addUser('INVESTOR', address0, 250000, 11, 3);
-  addUser('INVESTOR', address0, 1, 11, 3);
-  addUser('INVESTOR', address0, 1, 11, 3);
-  addUser('INVESTOR', address0, 1, 11, 3);
 
-  addUser('BORROWER', address0, 200000, 11, 3);
-  addUser('BORROWER', address0, 500000, 11, 3);
+
+
+
+
+function test(){
+  addUser('INVESTOR', address0, 260000, 11, "A");
+  addUser('INVESTOR', address0, 220000, 22, "B");
+  addUser('INVESTOR', address0, 700000, 33, "C");
+  addUser('INVESTOR', address0, 250000, 11, "D");
+  addUser('INVESTOR', address0, 1, 11, "A");
+  addUser('INVESTOR', address0, 1, 11, "A");
+  addUser('INVESTOR', address0, 1, 11, "A");
+
+  addUser('BORROWER', address0, 200000, 11, "B");
+  addUser('BORROWER', address0, 500000, 11, "B");
 // MyContract.addUserInContract('INVESTOR',address0, 260000, 11,{from: address0, gas: 300000 + gasEstimate});
 // MyContract.addUserInContract('INVESTOR',address0, 220000, 22,{from: address0, gas: 300000 + gasEstimate});
 // MyContract.addUserInContract('INVESTOR',address0, 700000, 33,{from: address0, gas: 300000 + gasEstimate});
@@ -59,29 +83,7 @@ function test(){
 /*********************************************************/
 /********************      Utils      ********************/
 /*********************************************************/
-function getAccountInfo(_whichAccount){
-  let web3 = new Web3();
-  web3.setProvider(new web3.providers.HttpProvider(ethereumUri));
-  return web3.eth.accounts[_whichAccount];
-}
-
 function getContractInfo(Contract_Address) {
-  if (!web3.isConnected()) {
-    throw new Error('unable to connect to ethereum node at ' + ethereumUri);
-  } else {
-    let coinbase = web3.eth.coinbase;
-    if (demo == 1) console.log('coinbase:' + coinbase);
-    let balance = web3.eth.getBalance(coinbase);
-    if (demo == 1) console.log('balance:' + web3.fromWei(balance, 'ether') + " ETH");
-    let accounts = web3.eth.accounts;
-    if (demo == 1) console.log(accounts);
-
-    if (web3.personal.unlockAccount(address0, '1')) {
-      if (demo == 1) console.log(`${address0} is unlocaked`);
-    } else {
-      if (demo == 1) console.log(`unlock failed, ${address0}`);
-    }
-  }
   let source = fs.readFileSync("./contracts/MatchMaker.sol", 'utf8');
   if (demo == 1) console.log('compiling contract...');
   let compiledContract = solc.compile(source);

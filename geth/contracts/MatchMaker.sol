@@ -10,18 +10,18 @@ contract MatchMaker {
 
 	// 投資家
 	struct Investor {
-		string addr; // 投資家的位址
+		string name; // 投資家的位址
 		uint totalAmount; // 投資額
         uint restAmount; // 餘額
         uint interest; // 要求利率(由於沒有支援浮點數，因此要再討論傳進來的格式)
-		uint creditRating; // 信用評價
+		uint creditRating; // 信用評價（用ABCDE）
 	}
 	struct Borrower {
-		string addr; //借錢人的位址
+		string name; //借錢人的位址
 		uint totalAmount; // 借錢總額
         uint restAmount; // 借錢餘額
         uint interest; // 要求利率(由於沒有支援浮點數，因此要再討論傳進來的格式)
-		uint creditRating; // 信用評價
+		uint creditRating; // 信用評價（用ABCDE）
 	}
 	string kindOfConteact;
 	uint private DEADLINE; // 截止日期（UnixTime）
@@ -41,7 +41,7 @@ contract MatchMaker {
 	}
 
 	/// 建構子 (秒, 錢)
-	constructor (uint _duration, string _kindOfConteact) {
+	constructor (uint _duration, string _kindOfConteact) public{
 		kindOfConteact = _kindOfConteact;
 		DEADLINE = now + _duration; // 用Unixtime設定截止日期
 		status = STATUS.WAITING;
@@ -50,17 +50,17 @@ contract MatchMaker {
 		numBorrowers = 0;
 	}
 
-	function addUserInContract (string _id, string _addr, uint _totalAmount, uint _interest, uint _creditRating) public aLive{
-		if (compareString(_id,'INVESTOR')){
+	function addUserInContract (string _id, string _name, uint _totalAmount, uint _interest, uint _creditRating) public aLive{
+		if (compareString(_id, 'INVESTOR')){
 			Investor inv = investors[numInvestors++];
-			inv.addr = _addr;
+			inv.name = _name;
 			inv.totalAmount = _totalAmount;
 			inv.restAmount = _totalAmount;
 			inv.interest = _interest;
 			inv.creditRating = _creditRating;
 		} else if (compareString(_id, 'BORROWER')){
 			Borrower bor = borrowers[numBorrowers++];
-			bor.addr = _addr;
+			bor.name = _name;
 			bor.totalAmount = _totalAmount;
 			bor.restAmount = _totalAmount;
 			bor.interest = _interest;
@@ -71,13 +71,13 @@ contract MatchMaker {
 	uint[] empty;
 	uint[] startIndex_for_borrowers;
 	/*************************  信用評價還沒加 *************************/
-	function make_a_match() public view returns(string){
+	// 回傳：|borrower1&borrower2,investor1&investor2|borrower1&borrower2,investor1&investor2|
+	// name totalAmount restAmount interest creditRating
+	function make_a_match() public returns(string){
 		status = STATUS.DOING_MATCH;
 		string memory Info = "";
 		sortedUsers(true, true); // 依照利率由高到低排序好投資方跟借錢人
 		checkEqualAmount(); // 比較相等的金錢的雙方
-		Info = concatString(Info, "\n\n");
-		Info = concatString(Info, showAllInfo());
 		updateCluster();
 		for (uint i = 0; i<numBorrowers; i++){
 			Info = concatString(Info, convertIntToString(startIndex_for_borrowers[i]));
@@ -90,21 +90,18 @@ contract MatchMaker {
 					investors[j].restAmount -= borrowers[i].restAmount;
 					borrowers[i].restAmount = 0;
 					borrowers[i].interest = 0;
-					Info = concatString(Info, "\n");
-					Info = addInTransactionRecord(Info, i, j);
+					Info = addInTransactionRecord(Info, i, j); // 下一筆
 				} else if (investors[j].restAmount == borrowers[i].restAmount){ // case 3：要求的利率下，investor的錢 == borrower的錢
 					investors[j].restAmount = 0;
 					investors[j].interest = 0;
 					borrowers[i].restAmount = 0;
 					borrowers[i].interest = 0;
-					Info = concatString(Info, "\n");
-					Info = addInTransactionRecord(Info, i, j);
+					Info = addInTransactionRecord(Info, i, j); // 下一筆
 				} else { // case 3：要求的利率下，investor的錢 < borrower的錢
 					borrowers[i].restAmount -= investors[j].restAmount;
 					investors[j].restAmount = 0;
 					investors[j].interest = 0;
-					Info = concatString(Info, "\n");
-					Info = addInTransactionRecord(Info, i, j);
+					Info = addInTransactionRecord(Info, i, j); // 同一筆
 				}
 			}
 			Info = concatString(Info, "\n");
@@ -155,8 +152,8 @@ contract MatchMaker {
 		string memory Info = "";
 		Info = concatString(Info, "\nINVESTORS : \n");
 		for (uint i = 0; i<numInvestors; i++){
-			Info = concatString(Info, "\taddress     : ");
-			Info = concatString(Info, investors[i].addr);Info = concatString(Info, "\n");
+			Info = concatString(Info, "\tname     : ");
+			Info = concatString(Info, investors[i].name);Info = concatString(Info, "\n");
 			Info = concatString(Info, "\t\ttotalAmount : ");
 			Info = concatString(Info, convertIntToString(investors[i].totalAmount));Info = concatString(Info, "\n");
 			Info = concatString(Info, "\t\trestAmount  : ");
@@ -169,8 +166,8 @@ contract MatchMaker {
 		}
 		Info = concatString(Info, "\nBORROWERS : \n");
 		for (i = 0; i < numBorrowers; i++){
-			Info = concatString(Info, "\taddress     : ");
-			Info = concatString(Info, borrowers[i].addr);Info = concatString(Info, "\n");
+			Info = concatString(Info, "\tname     : ");
+			Info = concatString(Info, borrowers[i].name);Info = concatString(Info, "\n");
 			Info = concatString(Info, "\t\ttotalAmount : ");
 			Info = concatString(Info, convertIntToString(borrowers[i].totalAmount));Info = concatString(Info, "\n");
 			Info = concatString(Info, "\t\trestAmount  : ");
@@ -217,12 +214,12 @@ contract MatchMaker {
     	return string(abi.encodePacked(a, b));
 	}
 
-	function compareString(string s1, string s2) private returns(bool){
+	function compareString(string s1, string s2) private pure returns(bool){
 		if (keccak256(abi.encodePacked(s1)) == keccak256(abi.encodePacked(s2))) return true;
 		else return false;
 	}
 
-	function convertIntToString(uint _number) private view returns (string) {
+	function convertIntToString(uint _number) private pure returns (string) {
 		// https://ethereum.stackexchange.com/questions/59128/error-security-no-assign-param-avoid-assigning-to-function-parameters
 		uint _tmpN = _number;
 		if (_tmpN == 0) {
@@ -250,7 +247,7 @@ contract MatchMaker {
 	uint[] arr;	// 要寫在外面，寫在function內會出錯==
 	uint tmpPreIndex;
 	uint tmpInterest;
-	function sortedUsers(bool sortInvestor, bool sortBorrower) private view {
+	function sortedUsers(bool sortInvestor, bool sortBorrower) private {
 		if (sortInvestor){
 			// 排序利息
 			arr = empty;
@@ -307,20 +304,20 @@ contract MatchMaker {
 
 	// https://gist.github.com/subhodi/b3b86cc13ad2636420963e692a4d896f
 	// 這個sort不會改變原本的investors跟borrowers的array順序
-	function sortFromBigToSmall(uint[] data, ID _id, uint preIndex) public view returns(uint[]) {
+	function sortFromBigToSmall(uint[] data, ID _id, uint preIndex) public returns(uint[]) {
     	if (data.length > 1) quickSort(data, int(0), int(data.length - 1), _id, preIndex);
 		return data;
     }
-    function quickSort(uint[] memory arr, int left, int right, ID _id, uint preIndex) private{
+    function quickSort(uint[] memory arr1, int left, int right, ID _id, uint preIndex) private{
         int i = left;
         int j = right;
         if(i==j) return;
-        uint pivot = arr[uint(left + (right - left) / 2)];
+        uint pivot = arr1[uint(left + (right - left) / 2)];
         while (i <= j) {
-            while (arr[uint(i)] > pivot) i++;
-            while (pivot > arr[uint(j)]) j--;
+            while (arr1[uint(i)] > pivot) i++;
+            while (pivot > arr1[uint(j)]) j--;
             if (i <= j) {
-                (arr[uint(i)], arr[uint(j)]) = (arr[uint(j)], arr[uint(i)]);
+                (arr1[uint(i)], arr1[uint(j)]) = (arr1[uint(j)], arr1[uint(i)]);
 
 				// 交換investor，由於他是指標，所以都不能直接用暫存的方式，只能找一個位置來當作暫存
 				// uint256(-1) 好像 uint是到不了的
@@ -338,12 +335,12 @@ contract MatchMaker {
             }
         }
         if (left < j)
-            quickSort(arr, left, j, _id, preIndex);
+            quickSort(arr1, left, j, _id, preIndex);
         if (i < right)
-            quickSort(arr, i, right, _id, preIndex);
+            quickSort(arr1, i, right, _id, preIndex);
     }
 
-	function checkEqualAmount() private view {
+	function checkEqualAmount() private {
 		for (uint i = 0; i<numBorrowers; i++){
 			if (borrowers[i].restAmount == 0) break;
 			for (uint j = 0; j<numInvestors; j++){
@@ -361,7 +358,7 @@ contract MatchMaker {
 		}
 	}
 
-	function updateCluster() private view {
+	function updateCluster() private {
 		startIndex_for_borrowers = empty;
 		bool isNotPush = true;
 		for (uint i = 0; i<numBorrowers; i++){
