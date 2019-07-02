@@ -62,27 +62,25 @@ let gasEstimate = web3.eth.estimateGas({data: '0x' + bytecode});
 
 // https://ethereum.stackexchange.com/questions/55222/uncaught-typeerror-this-eth-sendtransaction-is-not-a-function?rq=1
 // https://blog.csdn.net/hdyes/article/details/80818183
-var MyContract = web3.eth.contract(abi).at('0x20960eae4e2c2a77f21d330cf927fde672bfa843');
+var MyContract = web3.eth.contract(abi).at('0xcb75cf88c4a6f7e4f3cc3a0cf38206b73668af36');
 
-//var text1 = MyContract.fund({from: address1, gas: 50000 + gasEstimate, value: web3.toWei(1, "ether")});
-var text2 = MyContract.fund({from: address2, gas: 50000 + gasEstimate, value: 3});
+var text1 = MyContract.fund({from: address1, gas: 50000 + gasEstimate, value: 7});
+// var text2 = MyContract.fund({from: address2, gas: 50000 + gasEstimate, value: 3});
 // console.log(text2);
-var text3 = MyContract.fund({from: address3, gas: 50000 + gasEstimate, value: 5});
+// var text3 = MyContract.fund({from: address3, gas: 50000 + gasEstimate, value: 5});
 //var text4 = MyContract.checkGoalReached({from: address0, gas: 50000 + gasEstimate,});
 console.log('------------------------------------------------------------');
 var now = MyContract.getNow();
-var duration = MyContract.getDuration();
 var goalAmount = MyContract.getGoalAmountn();
 
 var numInvestors = MyContract.numInvestors();
-var deadline = MyContract.deadline();
-var status = MyContract.status();
-var ended = MyContract.ended();
+var deadline = MyContract.DEADLINE();
+var status = MyContract.getStatus();
+var ended = MyContract.ISEND();
 var goalAmount = MyContract.goalAmount();
 // var totalAmount = web3.fromWei(MyContract.totalAmount(), 'ether').toNumber();
 var totalAmount = MyContract.totalAmount();
 
-console.log('duration = ' + duration);
 console.log('goalAmount = ' + goalAmount);
 
 console.log('numInvestors = ' + numInvestors);
