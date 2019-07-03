@@ -1,7 +1,6 @@
 {
   "name": "geth",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,7 +8,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ganache-cli": "^6.4.4",
     "solc": "^0.4.25",
     "web3": "^0.20.0"
-  }
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  },
+  "description": ""
 }

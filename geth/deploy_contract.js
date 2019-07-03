@@ -1,12 +1,7 @@
 const Web3 = require('web3');
 const fs = require('fs');
 const solc = require('solc');
-
-const demo = 0; // 0 for print nothing
-
-/*
- * connect to ethereum node
- */ 
+const demo = 1; // 0 for print nothing
 const ethereumUri = 'http://localhost:8545';
 
 
@@ -31,12 +26,21 @@ if(!web3.isConnected()){
     }
 }
 
-/*
-* Compile Contract and Fetch ABI
-*/ 
+
+
+
+
+/*********************************************************/
+deploy_matchmaker_contract(600, "裝修房子"); // 600秒，合約類別
+// deploy_crowdfunding_contract(600, 10000);
+/*********************************************************/
+
+
+
+
+
 function deploy_contract(contract_Name, duration, index, callback){
-    let name = contract_Name;
-    let source = fs.readFileSync("./contracts/" + name, 'utf8');
+    let source = fs.readFileSync("./contracts/" + contract_Name, 'utf8');
 
     if (demo == 1) console.log('compiling contract...');
     let compiledContract = solc.compile(source);
@@ -65,7 +69,7 @@ function deploy_contract(contract_Name, duration, index, callback){
     let myContractReturned = MyContract.new(duration, index, {
         from: account0,
         data: '0x'+ bytecode,
-        gas: gasEstimate + 50000,
+        gas: gasEstimate + 10000000000,
     }, function (err, myContract) {
         if (!err) {
             // NOTE: The callback will fire twice!
@@ -89,8 +93,6 @@ function deploy_contract(contract_Name, duration, index, callback){
                 if (demo == 1) console.log(err);
         }
     });
-
-    return myContractReturned;
 }
 
 function deploy_matchmaker_contract(_duration, _kindOfContract){
@@ -105,6 +107,3 @@ function deploy_matchmaker_contract(_duration, _kindOfContract){
 function deploy_crowdfunding_contract(_duration, _totalAmount){
     deploy_contract("CrowdFunding.sol", _duration, _totalAmount);
 }
-
-deploy_matchmaker_contract(600, "INVESTOR");
-// deploy_crowdfunding_contract(600, 10000);

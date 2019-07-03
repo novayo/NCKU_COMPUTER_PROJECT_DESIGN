@@ -1,4 +1,5 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.25;
+
 contract CrowdFunding {
 	enum STATUS{
 		FUNDING, SUCCESS, FAILED
