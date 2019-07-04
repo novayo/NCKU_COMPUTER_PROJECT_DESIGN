@@ -5,7 +5,7 @@ const ethereumUri = 'http://localhost:8545';
 const demo = 0;
 
 
-
+var addr = "0xa9d190b2d58092fff53ccb590de9e5c10370daa6";
 let web3 = new Web3();
 web3.setProvider(new web3.providers.HttpProvider(ethereumUri));
 const address0 =  web3.eth.accounts[0];// user
@@ -27,13 +27,13 @@ if (!web3.isConnected()) {
 }
 
 /*********************************************************/
-fund(7);
+fund(7); // 錢
 /*********************************************************/
 
 
 
 function fund(_fundMoney){
-  var value = getContractInfo("0xce51f0c98ae9c32509b253e1f5832acc2564822c"); 
+  var value = getContractInfo(addr); 
   value[0].fund({from: address0, gas: value[1], value: _fundMoney});
 }
 
@@ -60,45 +60,3 @@ function getContractInfo(Contract_Address) {
   var contract = web3.eth.contract(abi).at(Contract_Address);
   return [contract, gasestimate];
 }
-
-
-
-
-
-
-
-
-
-
-// var text2 = MyContract.fund({from: address2, gas: 50000 + gasEstimate, value: 3});
-// if (demo == 1) console.log(text2);
-// var text3 = MyContract.fund({from: address3, gas: 50000 + gasEstimate, value: 5});
-//var text4 = MyContract.checkGoalReached({from: address0, gas: 50000 + gasEstimate,});
-// if (demo == 1) console.log('------------------------------------------------------------');
-// var now = MyContract.getNow();
-// var goalAmount = MyContract.getGoalAmountn();
-
-// var numInvestors = MyContract.numInvestors();
-// var deadline = MyContract.DEADLINE();
-// var status = MyContract.getStatus();
-// var ended = MyContract.ISEND();
-// var goalAmount = MyContract.goalAmount();
-// // var totalAmount = web3.fromWei(MyContract.totalAmount(), 'ether').toNumber();
-// var totalAmount = MyContract.totalAmount();
-
-// if (demo == 1) console.log('goalAmount = ' + goalAmount);
-
-// if (demo == 1) console.log('numInvestors = ' + numInvestors);
-// if (demo == 1) console.log('now = ' + now);
-// if (demo == 1) console.log('deadline = ' + deadline);
-// if (demo == 1) console.log('status = ' + status);
-// if (demo == 1) console.log('ended = ' + ended);
-// if (demo == 1) console.log('goalAmount = ' + goalAmount);
-// if (demo == 1) console.log('totalAmount = ' + totalAmount);
-// if (demo == 1) console.log('------------------------------------------------------------');
-
-
-// if (demo == 1) console.log(ended);
-
-// var text7 = web3.fromWei(MyContract.totalAmount(), 'ether');
-// if (demo == 1) console.log(text7.toNumber()); //https://ethereum.stackexchange.com/questions/7656/what-are-c-e-and-s-properties-in-message-call-return-object

@@ -31,8 +31,8 @@ if(!web3.isConnected()){
 
 
 /*********************************************************/
-deploy_matchmaker_contract(600, "裝修房子"); // 600秒，合約類別
-// deploy_crowdfunding_contract(600, 10000);
+// deploy_matchmaker_contract(600, "裝修房子"); // 600秒，合約類別
+deploy_crowdfunding_contract(600, 10000); // 金額 利率 其數 時間 合約類別
 /*********************************************************/
 
 

@@ -15,5 +15,5 @@
   "devDependencies": {
     "mocha": "^6.1.4"
   },
-  "description": ""
+  "description": "建立geth資料夾 在geth資料夾內 1. 建立gensis.json 2. 建立db資料夾 3. 執行"
 }
