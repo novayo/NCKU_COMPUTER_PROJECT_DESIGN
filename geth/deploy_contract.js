@@ -32,14 +32,14 @@ if(!web3.isConnected()){
 
 /*********************************************************/
 // deploy_matchmaker_contract(600, "裝修房子"); // 600秒，合約類別
-deploy_crowdfunding_contract(600, 10000); // 金額 利率 其數 時間 合約類別
+deploy_crowdfunding_contract("施崇祐", 10, 1, 12, 600, "裝修房子"); // 合約擁有者 總金額 利率 其數 時間 合約類別
 /*********************************************************/
 
 
 
 
 
-function deploy_contract(contract_Name, duration, index, callback){
+function deploy_contract(contract_Name, owner, total_Money, interest, periods, duration, type, callback){
     let source = fs.readFileSync("./contracts/" + contract_Name, 'utf8');
 
     if (demo == 1) console.log('compiling contract...');
@@ -65,38 +65,69 @@ function deploy_contract(contract_Name, duration, index, callback){
     let MyContract = web3.eth.contract(abi);
     if (demo == 1) console.log('deploying contract...');
 
-    //(秒, 錢)
-    let myContractReturned = MyContract.new(duration, index, {
-        from: account0,
-        data: '0x'+ bytecode,
-        gas: gasEstimate + 10000000000,
-    }, function (err, myContract) {
-        if (!err) {
-            // NOTE: The callback will fire twice!
-            // Once the contract has the transactionHash property set and once its deployed on an address.
 
-            // e.g. check tx hash on the first call (transaction send)
-            if (!myContract.address) {
-                if (demo == 1) console.log(`myContract.transactionHash = ${myContract.transactionHash}`); // The hash of the transaction, which deploys the contract
-            
-            // check address on the second call (contract deployed)
-            } else {
-                global.contractAddress = myContract.address;
-                if (demo == 1) console.log('myContract.address = ' + myContract.address);
-                callback(myContract.address); // http://larry850806.github.io/2016/06/16/nodejs-async/
-            }
+    if (contract_Name === "MatchMaker.sol"){
+        //(秒, 錢)
+        let myContractReturned = MyContract.new(duration, type, {
+            from: account0,
+            data: '0x'+ bytecode,
+            gas: gasEstimate + 10000000000,
+        }, function (err, myContract) {
+            if (!err) {
+                // NOTE: The callback will fire twice!
+                // Once the contract has the transactionHash property set and once its deployed on an address.
+
+                // e.g. check tx hash on the first call (transaction send)
+                if (!myContract.address) {
+                    if (demo == 1) console.log(`myContract.transactionHash = ${myContract.transactionHash}`); // The hash of the transaction, which deploys the contract
                 
+                // check address on the second call (contract deployed)
+                } else {
+                    global.contractAddress = myContract.address;
+                    if (demo == 1) console.log('myContract.address = ' + myContract.address);
+                    callback(myContract.address); // http://larry850806.github.io/2016/06/16/nodejs-async/
+                }
+                    
 
-            // Note that the returned "myContractReturned" === "myContract",
-            // so the returned "myContractReturned" object will also get the address set.
-        } else {
-                if (demo == 1) console.log(err);
-        }
-    });
+                // Note that the returned "myContractReturned" === "myContract",
+                // so the returned "myContractReturned" object will also get the address set.
+            } else {
+                    if (demo == 1) console.log(err);
+            }
+        });
+    } else if (contract_Name === "CrowdFunding.sol"){
+        let myContractReturned = MyContract.new(owner, total_Money, interest, periods, duration, type, {
+            from: account0,
+            data: '0x'+ bytecode,
+            gas: gasEstimate + 10000000000,
+        }, function (err, myContract) {
+            if (!err) {
+                // NOTE: The callback will fire twice!
+                // Once the contract has the transactionHash property set and once its deployed on an address.
+
+                // e.g. check tx hash on the first call (transaction send)
+                if (!myContract.address) {
+                    if (demo == 1) console.log(`myContract.transactionHash = ${myContract.transactionHash}`); // The hash of the transaction, which deploys the contract
+                
+                // check address on the second call (contract deployed)
+                } else {
+                    global.contractAddress = myContract.address;
+                    if (demo == 1) console.log('myContract.address = ' + myContract.address);
+                    callback(myContract.address); // http://larry850806.github.io/2016/06/16/nodejs-async/
+                }
+                    
+
+                // Note that the returned "myContractReturned" === "myContract",
+                // so the returned "myContractReturned" object will also get the address set.
+            } else {
+                    if (demo == 1) console.log(err);
+            }
+        });
+    }
 }
 
 function deploy_matchmaker_contract(_duration, _kindOfContract){
-    deploy_contract("MatchMaker.sol", _duration, _kindOfContract, function(RETURN_ADDRESS){
+    deploy_contract("MatchMaker.sol", "", "", "", _duration, _kindOfContract, function(RETURN_ADDRESS){
         /*
          * Return ADDRESS to MySql
          */
@@ -104,6 +135,11 @@ function deploy_matchmaker_contract(_duration, _kindOfContract){
     });
 }
 
-function deploy_crowdfunding_contract(_duration, _totalAmount){
-    deploy_contract("CrowdFunding.sol", _duration, _totalAmount);
+function deploy_crowdfunding_contract(_owner, _total_Money, _interest, _periods, _duration, _totalAmount){
+    deploy_contract("CrowdFunding.sol", _owner, _total_Money, _interest, _periods, _duration, _totalAmount, function(RETURN_ADDRESS){
+        /*
+         * Return ADDRESS to MySql
+         */
+         console.log(RETURN_ADDRESS);
+    });
 }

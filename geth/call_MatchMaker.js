@@ -4,7 +4,7 @@ const solc = require('solc');
 const ethereumUri = 'http://localhost:8545';
 const demo = 0;
 
-var addr = "0xa9d190b2d58092fff53ccb590de9e5c10370daa6";
+var addr = "0x80b972bdf2eb4212242c43d709d4ad3ef9655f77";
 var web3 = new Web3();
 web3.setProvider(new web3.providers.HttpProvider(ethereumUri));
 const address0 = web3.eth.accounts[0];// user
@@ -27,13 +27,14 @@ if (!web3.isConnected()) {
 
 
 
-/*********************************************************/
 
+
+/*********************************************************/
 // addDefaultUser();
 // console.log(showAllInfo());
 // make_a_match();
 // console.log(show_TRANSACTION());
-// console.log(make_a_match());
+console.log(make_a_match());
 // upDateContract();
 // addUser('INVESTOR', "施崇祐", 260000, 11, "A");
 
@@ -118,7 +119,7 @@ function make_a_match() {
   var result = value[0].make_a_match({from: address0, gas: value[1]});
   value[0].afterMakeAMatch(result, {from: address0, gas: value[1]});
 
-  return parseString(show_TRANSACTION({from: address0, gas: value[1]}));
+  return parseString(show_TRANSACTION());
   // [資料]
   // [[第n筆資料]]
   // [[[貸款人, 借款人]]]
@@ -155,7 +156,7 @@ function show_State(){
 function show_TERMS_OF_SERVICE(){
   var value = getContractInfo(addr);
   value[0].checkGoalReached({from: address0, gas: value[1]});
-  var val = value[0].get_TERMS_OF_SERVICE({from: address0, gas: value[1]});
+  var val = value[0].TERMS_OF_SERVICE({from: address0, gas: value[1]});
   value[0].checkGoalReached({from: address0, gas: value[1]});
   return val;
 }
@@ -163,7 +164,7 @@ function show_TERMS_OF_SERVICE(){
 function show_TRANSACTION(){
   var value = getContractInfo(addr);
   value[0].checkGoalReached({from: address0, gas: value[1]});
-  var val = value[0].get_TRANSACTION({from: address0, gas: value[1]});
+  var val = value[0].TRANSACTION({from: address0, gas: value[1]});
   value[0].checkGoalReached({from: address0, gas: value[1]});
   return val;
 }
@@ -171,7 +172,7 @@ function show_TRANSACTION(){
 function show_KIND_OF_CONTRACT(){
   var value = getContractInfo(addr);
   value[0].checkGoalReached({from: address0, gas: value[1]});
-  var val = value[0].get_KIND_OF_CONTRACT({from: address0, gas: value[1]});
+  var val = value[0].KIND_OF_CONTRACT({from: address0, gas: value[1]});
   value[0].checkGoalReached({from: address0, gas: value[1]});
   return val;
 }
@@ -179,7 +180,7 @@ function show_KIND_OF_CONTRACT(){
 function show_DEADLINE(){
   var value = getContractInfo(addr);
   value[0].checkGoalReached({from: address0, gas: value[1]});
-  var val = value[0].get_DEADLINE({from: address0, gas: value[1]});
+  var val = value[0].DEADLINE({from: address0, gas: value[1]});
   value[0].checkGoalReached({from: address0, gas: value[1]});
   return val;
 }
@@ -187,7 +188,7 @@ function show_DEADLINE(){
 function show_FINISH_TIME(){
   var value = getContractInfo(addr);
   value[0].checkGoalReached({from: address0, gas: value[1]});
-  var val = value[0].get_FINISH_TIME({from: address0, gas: value[1]});
+  var val = value[0].FINISH_TIME({from: address0, gas: value[1]});
   value[0].checkGoalReached({from: address0, gas: value[1]});
   return val;
 }
@@ -195,15 +196,7 @@ function show_FINISH_TIME(){
 function show_DURATION(){
   var value = getContractInfo(addr);
   value[0].checkGoalReached({from: address0, gas: value[1]});
-  var val = value[0].get_DURATION({from: address0, gas: value[1]});
-  value[0].checkGoalReached({from: address0, gas: value[1]});
-  return val;
-}
-
-function show_DURATION(){
-  var value = getContractInfo(addr);
-  value[0].checkGoalReached({from: address0, gas: value[1]});
-  var val = value[0].get_DURATION({from: address0, gas: value[1]});
+  var val = value[0].DURATION({from: address0, gas: value[1]});
   value[0].checkGoalReached({from: address0, gas: value[1]});
   return val;
 }
@@ -211,7 +204,7 @@ function show_DURATION(){
 function show_NUMINVESTORS(){
   var value = getContractInfo(addr);
   value[0].checkGoalReached({from: address0, gas: value[1]});
-  var val = value[0].get_NUMINVESTORS({from: address0, gas: value[1]});
+  var val = value[0].NUMINVESTORS({from: address0, gas: value[1]});
   value[0].checkGoalReached({from: address0, gas: value[1]});
   return val;
 }
@@ -219,7 +212,7 @@ function show_NUMINVESTORS(){
 function show_NUMBORROWERS(){
   var value = getContractInfo(addr);
   value[0].checkGoalReached({from: address0, gas: value[1]});
-  var val = value[0].get_NUMBORROWERS({from: address0, gas: value[1]});
+  var val = value[0].NUMBORROWERS({from: address0, gas: value[1]});
   value[0].checkGoalReached({from: address0, gas: value[1]});
   return val;
 }

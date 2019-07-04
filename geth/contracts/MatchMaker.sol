@@ -1,4 +1,4 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.25;
 
 contract MatchMaker {
 	enum ID{
@@ -25,18 +25,18 @@ contract MatchMaker {
 	}
 
 	/********** 合約參數 **********/
-	string private TERMS_OF_SERVICE = "此智能合約用於P2P借貸平台的撮合功能\n\t製作者：施崇祐 陳姿妤 李昱廷（成功大學）\n";
-	string private TRANSACTION = "";
-	string private KIND_OF_CONTRACT; // 合約類別
-	uint private DURATION; // 截止日期（UnixTime）
-	uint private DEADLINE; // 截止日期（UnixTime）
-	uint private FINISH_TIME; // 截止日期（UnixTime）
-	STATUS private status; // 募資活動的狀態
+	string public TERMS_OF_SERVICE = "此智能合約用於P2P借貸平台的撮合功能\n\t製作者：施崇祐 陳姿妤 李昱廷（成功大學）\n";
+	string public TRANSACTION = "";
+	string public KIND_OF_CONTRACT; // 合約類別
+	uint public DURATION; // 剩餘時間（秒）
+	uint public DEADLINE; // 截止日期（UnixTime）
+	uint public FINISH_TIME; // 完成日期（UnixTime）
+	STATUS public status; // 募資活動的狀態
 
-	uint private numInvestors; // 投資家數目
-	uint private numBorrowers; // 借錢家數目
-	mapping (uint => Investor) private investors; // 管理投資家的對應表（map）
-	mapping (uint => Borrower) private borrowers; // 管理投資家的對應表（map）
+	uint public numInvestors; // 投資家數目
+	uint public numBorrowers; // 借錢家數目
+	mapping (uint => Investor) public investors; // 管理投資家的對應表（map）
+	mapping (uint => Borrower) public borrowers; // 管理投資家的對應表（map）
 
 	modifier aLive () {
 		if (!(status == STATUS.SUCCESS || status == STATUS.FAILED)) _;
@@ -73,7 +73,7 @@ contract MatchMaker {
 
 	uint[] empty;
 	uint[] startIndex_for_borrowers;
-	// 回傳：|borrower1&borrower2,investor1&investor2|borrower1&borrower2,investor1&investor2|
+	// 回傳：|borrowerName&borrowerAmount,investorName&investorAmount|orrowerName&borrowerAmount,investorName&investorAmount|
 	function make_a_match() public view aLive returns(string){
 		string memory Info = "";
 		uint[2] memory interest;
@@ -166,26 +166,6 @@ contract MatchMaker {
 		return Info;
 	}
 
-	function get_TERMS_OF_SERVICE() public view returns(string) {
-		return TERMS_OF_SERVICE;
-	}
-
-	function get_TRANSACTION() public view returns(string){
-		return TRANSACTION;
-	}
-
-	function get_KIND_OF_CONTRACT() public view returns(string){
-		return KIND_OF_CONTRACT;
-	}
-
-	function get_DEADLINE() public view returns(uint) {
-		return DEADLINE;
-	}
-
-	function get_FINISH_TIME() public view returns(uint) {
-		return FINISH_TIME;
-	}
-
 	function get_STATUS() public view returns(string) {
 		if (status == STATUS.WAITING){
 			return "Waiting";
@@ -196,14 +176,6 @@ contract MatchMaker {
 		} else if (status == STATUS.FAILED){
 			return "Failed";
 		}
-	}
-
-    function get_NUMINVESTORS() public view returns(uint) {
-		return numInvestors;
-	}
-
-	function get_NUMBORROWERS() public view returns(uint) {
-		return numBorrowers;
 	}
 
 	function get_INVESTORS() public view returns(string) {
