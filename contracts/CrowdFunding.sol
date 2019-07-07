@@ -59,7 +59,8 @@ contract CrowdFunding {
 			inv.name = _name;
 			inv.amount = _fundMoney;
 			if (currentAmount + inv.amount >= GOALAMOUNT) {
-				inv.restAmount = GOALAMOUNT - currentAmount;
+				inv.restAmount = inv.amount - GOALAMOUNT;
+				inv.restAmount = inv.restAmount + currentAmount;
 				currentAmount = GOALAMOUNT;
 			} else {
 				inv.restAmount = 0;
