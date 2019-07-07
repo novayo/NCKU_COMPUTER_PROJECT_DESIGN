@@ -6,7 +6,7 @@ const demo = 0;
 
 
 /*********************************************************/
-const addr = "0x06903bc54742a698f16f0d29d689456df68172c6"; // Copy the contract address here
+const addr = "0x3a2f8a1a5e7a42952e51f3c42fa3c4fa87c97f2b"; // Copy the contract address here
 /*********************************************************/
 
 
@@ -35,12 +35,12 @@ if (!web3.isConnected()) {
 
 
 /*********************************************************/
-// console.log(showAllInfo());
+console.log(showAllInfo());
 // addDefaultUser();
 // console.log(showAllInfo());
 // console.log(make_a_match());
 // console.log(show_TRANSACTION());
-console.log(showAllInfo());
+// console.log(showAllInfo());
 
 
 
@@ -52,8 +52,6 @@ function addDefaultUser() {
   addUser('INVESTOR', "李昱廷", 700000, 33, "B");
   addUser('INVESTOR', "蔡英文", 250000, 11, "B");
   addUser('INVESTOR', "馬英九", 1, 11, "B");
-  addUser('INVESTOR', "小紅帽", 1, 11, "C");
-  addUser('INVESTOR', "艾希", 1, 11, "B");
   
 
   addUser('BORROWER', "法洛士", 200000, 11, "A");
@@ -80,7 +78,7 @@ function make_a_match() {
   var result = value[0].make_a_match({ from: address0, gas: value[1] });
   value[0].afterMakeAMatch(result, { from: address0, gas: value[1] });
 
-  return parseString(show_TRANSACTION());
+  return parseString(result);
   // [資料]
   // [[第n筆資料]]
   // [[[貸款人, 借款人]]]

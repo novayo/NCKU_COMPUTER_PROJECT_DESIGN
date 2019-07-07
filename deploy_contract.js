@@ -2,7 +2,7 @@ const Web3 = require('web3');
 const fs = require('fs');
 const solc = require('solc');
 const ethereumUrl = 'http://localhost:8545';
-const demo = 1; // 0 for print nothing
+const demo = 0; // 0 for print nothing
 
 
 var web3 = new Web3();
@@ -31,8 +31,8 @@ if (!web3.isConnected()) {
 
 
 /*********************************************************/
-// deploy_hello_world();
-deploy_matchmaker_contract(600, "裝修房子"); // 600秒，合約類別
+deploy_hello_world();
+// deploy_matchmaker_contract(600, "裝修房子"); // 600秒，合約類別
 // deploy_crowdfunding_contract("施崇祐", 10, 1, 12, 600, "裝修房子"); // 合約擁有者 總金額 利率 其數 時間 合約類別
 /*********************************************************/
 

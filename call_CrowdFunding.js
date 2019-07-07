@@ -6,7 +6,7 @@ const demo = 0;
 
 
 /*********************************************************/
-const addr = "0x64e706809c334bdca6fe0ba13677188ef90a9128"; // Copy the contract address here
+const addr = "0x4047909d812aa480aee08f40aa4ffb87b3c05d7d"; // Copy the contract address here
 /*********************************************************/
 
 
@@ -35,9 +35,16 @@ if (!web3.isConnected()) {
 
 
 /*********************************************************/
-// fund("咸蛋超人9", 1); // 名稱, 錢
+console.log(showAllInfo());
+// fund("咸蛋超人1", 1); // 名稱, 錢
+// console.log(showAllInfo());
+// fund("咸蛋超人9", 9); // 名稱, 錢
+// console.log(showAllInfo());
 // console.log(getResult());
 // console.log(showAllInfo());
+
+
+
 // upDateContract();
 /*********************************************************/
 
@@ -57,7 +64,7 @@ function getResult() {
   var result = value[0].get_TRANSACTION({ from: address0, gas: value[1] });
   value[0].afterGet_TRANSACTION(result, { from: address0, gas: value[1] });
 
-  return show_TRANSACTION().split(",");
+  return result.split(",");
   // [合約擁有者, 借款人1, 借款人2]
 }
 
@@ -202,7 +209,7 @@ function getContractInfo(Contract_Address) {
     var bytecode = compiledContract.contracts[contractName].bytecode;
     var abi = JSON.parse(compiledContract.contracts[contractName].interface);
   }
-  let gasestimate = web3.eth.estimateGas({ data: '0x' + bytecode }) + 300000;
+  let gasestimate = web3.eth.estimateGas({ data: '0x' + bytecode }) + 10000000000;
 
   // https://ethereum.stackexchange.com/questions/55222/uncaught-typeerror-this-eth-sendtransaction-is-not-a-function?rq=1
   // https://blog.csdn.net/hdyes/article/details/80818183
