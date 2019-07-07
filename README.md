@@ -32,33 +32,20 @@
         brew install ethereum
 
 ## Building
-1. 建立一個db資料夾
+1. 初始化區塊鏈環境
 
-        mkdir db
-        
-2. 初始化區塊鏈環境
-
-        geth --datadir "./db" init gensis.json
-3. 安裝相關套件
+        ./geth_firstRun.sh
+2. 安裝相關套件
 
         sudo npm install
-4. 先建立一個default帳號
-
-        ./firstRunGeth.sh
-        
-        /*** In geth console ***/
-        personal.newAccount("1")
-        exit
-        
 ## Usage
 1. 執行區塊鏈server
 
-        ./geth.sh
+        ./geth_start.sh
 2. 開啟另一個terminal並部署合約上去
 
         node deploy_contract.js
-
-3. 複製顯示的地址到**call_HelloWorld.js**的第8行 
+3. 複製顯示的地址到**call_HelloWorld.js**的第9行 
 4. 呼叫合約
 
         node call_HelloWorld.js
