@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "novayo",
   "license": "ISC",
   "dependencies": {
     "ganache-cli": "^6.4.4",
@@ -15,5 +15,18 @@
   "devDependencies": {
     "mocha": "^6.1.4"
   },
-  "description": "建立geth資料夾 在geth資料夾內 1. 建立gensis.json 2. 建立db資料夾 3. 執行"
+  "description": "Final Project in NCKU",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/novayo/NCKU_COMPUTER_PROJECT_DESIGN.git"
+  },
+  "keywords": [
+    "geth",
+    "solidity",
+    "ncku-csie"
+  ],
+  "bugs": {
+    "url": "https://github.com/novayo/NCKU_COMPUTER_PROJECT_DESIGN/issues"
+  },
+  "homepage": "https://github.com/novayo/NCKU_COMPUTER_PROJECT_DESIGN#readme"
 }
