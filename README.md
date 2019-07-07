@@ -66,3 +66,5 @@
 2. https://stackoverflow.com/questions/54499116/how-do-you-compare-strings-in-solidity
 3. https://ethereum.stackexchange.com/questions/63515/how-to-access-string-arguments-from-calldata-in-external-functions-0-5-x
 4. https://ethereum.stackexchange.com/questions/45972/ive-got-an-error-while-compiling-use-constructor-instead
+https://github.com/novayo/NCKU_COMPUTER_PROJECT_DESIGN/archive/master.zip
+https://github.com/novayo/NCKU_COMPUTER_PROJECT_DESIGN/archive/master.tar.gz
