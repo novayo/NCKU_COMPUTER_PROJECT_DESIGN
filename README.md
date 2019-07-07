@@ -1,7 +1,7 @@
 # COMPUTER PROJECT DESIGN
 ###### tags: `GETH`
 
-* [Source Code](https://github.com/novayo/NCKU_COMPUTER_PROJECT_DESIGN)
+* [Source Code](https://novayo.github.io/NCKU_COMPUTER_PROJECT_DESIGN/)
 * [Hackmd](https://hackmd.io/iqub9lj-S0ixUDCbdIl4mQ)
 ---
 
@@ -10,14 +10,17 @@
 >     - CrowdFunding.sol
 >     - HelloWorld.sol
 >     - MatchMaker.sol
+>   - utils
+>     - gensis.json
+>     - mineWhenNeeded.js
+>     - addDefaultAccount_in_Gensis.js
 >   - call_CrowdFunding.js
 >   - call_HelloWorld.js
 >   - call_MatchMaker.js
 >   - deploy_contract.js
->   - gensis.json
 >   - package.json
->   - firstRunGeth .sh
->   - geth .sh
+>   - geth_firstRun .sh
+>   - geth_start .sh
     
 ## Environment
 * [Node js](https://nodejs.org/en/download/)
