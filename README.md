@@ -1,3 +1,5 @@
+https://github.com/novayo/NCKU_COMPUTER_PROJECT_DESIGN/archive/master.zip
+https://github.com/novayo/NCKU_COMPUTER_PROJECT_DESIGN/archive/master.tar.gz
 # COMPUTER PROJECT DESIGN
 ###### tags: `GETH`
 
