@@ -2,7 +2,7 @@ const Web3 = require('web3');
 const fs = require('fs');
 const solc = require('solc');
 const ethereumUrl = 'http://localhost:8545';
-const demo = 1; // 0 for print nothing
+const demo = 0; // 0 for print nothing
 
 
 var web3 = new Web3();
@@ -148,9 +148,9 @@ function deploy_crowdfunding_contract(_owner, _total_Money, _interest, _periods,
 function deploy_hello_world() {
     let source = fs.readFileSync("./contracts/HelloWorld.sol", 'utf8');
 
-    console.log('compiling contract...');
+    if (demo == 1) console.log('compiling contract...');
     let compiledContract = solc.compile(source);
-    console.log('done');
+    if (demo == 1) console.log('done');
 
     for (let contractName in compiledContract.contracts) {
         // code and ABI that are needed by web3 
@@ -160,16 +160,16 @@ function deploy_hello_world() {
         var abi = JSON.parse(compiledContract.contracts[contractName].interface);
     }
 
-    console.log(JSON.stringify(abi, undefined, 2));
+    if (demo == 1) console.log(JSON.stringify(abi, undefined, 2));
 
     /*
     * deploy contract
     */
     let gasEstimate = web3.eth.estimateGas({ data: '0x' + bytecode });
-    console.log('gasEstimate = ' + gasEstimate);
+    if (demo == 1) console.log('gasEstimate = ' + gasEstimate);
 
     let MyContract = web3.eth.contract(abi);
-    console.log('deploying contract...');
+    if (demo == 1) console.log('deploying contract...');
 
 
     //(秒, 錢)
@@ -184,7 +184,7 @@ function deploy_hello_world() {
 
             // e.g. check tx hash on the first call (transaction send)
             if (!myContract.address) {
-                console.log(`myContract.transactionHash = ${myContract.transactionHash}`); // The hash of the transaction, which deploys the contract
+                if (demo == 1) console.log(`myContract.transactionHash = ${myContract.transactionHash}`); // The hash of the transaction, which deploys the contract
 
                 // check address on the second call (contract deployed)
             } else {
@@ -196,7 +196,7 @@ function deploy_hello_world() {
             // Note that the returned "myContractReturned" === "myContract",
             // so the returned "myContractReturned" object will also get the address set.
         } else {
-            console.log(err);
+            if (demo == 1) console.log(err);
         }
     });
 }

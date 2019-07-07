@@ -6,7 +6,7 @@ const demo = 0;
 
 
 /*********************************************************/
-const addr = '0x0ba25a52e93d467051212422a56a4f5366cd58b8'; // Copy the contract address here
+const addr = '0x0cff240fd4ecf04ca061213cc52d60e498149f30'; // Copy the contract address here
 /*********************************************************/
 
 
