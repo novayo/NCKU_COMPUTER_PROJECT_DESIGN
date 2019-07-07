@@ -20,8 +20,16 @@
 >   - geth .sh
     
 ## Environment
-* Node js
-* Geth
+* [Node js](https://nodejs.org/en/download/)
+* Geth： [Ubuntu](https://github.com/ethereum/go-ethereum/wiki/Installing-Geth#install-on-ubuntu-via-ppas) ， [Mac](https://github.com/ethereum/go-ethereum/wiki/Installation-Instructions-for-Mac)
+
+        # On Ubuntu
+        sudo apt-get update
+        sudo apt-get install ethereum
+        
+        # On Mac
+        brew tap ethereum/ethereum
+        brew install ethereum
 
 ## Building
 1. 建立一個db資料夾
