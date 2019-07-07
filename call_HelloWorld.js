@@ -6,7 +6,7 @@ const ethereumUrl = 'http://localhost:8545';
 
 
 /*********************************************************/
-const addr = '0x7816cdc1636ec5f35f068f7732d5daa11def42af'; // Copy the contract address here
+const addr = '0x06b8657a1e8acec703e2789c50356f2faef64ea5'; // Copy the contract address here
 /*********************************************************/
 
 
