@@ -56,14 +56,14 @@
         
 ## Handle Error Msg
 * **ERROR: Invalid Address**
-    * [Solution](https://ethereum.stackexchange.com/questions/2086/cannot-perform-write-functions-in-smart-contract-invalid-address)
+    > [Solution](https://ethereum.stackexchange.com/questions/2086/cannot-perform-write-functions-in-smart-contract-invalid-address)
 * **Invalid asm.js: Invalid member of stdlib** 
-    * Solution: Add "--no-warnings" while using node
-        `node --no-warnings deploy_contract.js`
+    > Solution: Add "--no-warnings" while using node
+    >   `node --no-warnings deploy_contract.js`
 * **Error: invalid argument 0: json: cannot unmarshal hex string of odd length into Go value of type hexutil.Bytes**
-    * Solution: 合約有寫錯
+    > Solution: 合約有寫錯
 * **BigNumber Error: new BigNumber() not a base 16 number**
-    * Solution: 合約的Construct寫錯
+    > Solution: 合約的Construct寫錯
 
 ## Reference
 1. https://ethereum.stackexchange.com/questions/729/how-to-concatenate-strings-in-solidity
