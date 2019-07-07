@@ -41,6 +41,7 @@
 2. 安裝相關套件
 
         sudo npm install
+    
 ## Usage
 1. 執行區塊鏈server
 
