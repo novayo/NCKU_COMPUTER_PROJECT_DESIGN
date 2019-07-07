@@ -4,7 +4,12 @@ const solc = require('solc');
 const ethereumUri = 'http://localhost:8545';
 const demo = 0;
 
-var addr = "0x80b972bdf2eb4212242c43d709d4ad3ef9655f77";
+
+/*********************************************************/
+var addr = "0x80b972bdf2eb4212242c43d709d4ad3ef9655f77"; // Copy the contract address here
+/*********************************************************/
+
+
 var web3 = new Web3();
 web3.setProvider(new web3.providers.HttpProvider(ethereumUri));
 const address0 = web3.eth.accounts[0];// user

@@ -5,7 +5,11 @@ const ethereumUri = 'http://localhost:8545';
 const demo = 0;
 
 
-var addr = "0x64e706809c334bdca6fe0ba13677188ef90a9128";
+/*********************************************************/
+var addr = "0x64e706809c334bdca6fe0ba13677188ef90a9128"; // Copy the contract address here
+/*********************************************************/
+
+
 let web3 = new Web3();
 web3.setProvider(new web3.providers.HttpProvider(ethereumUri));
 const address0 =  web3.eth.accounts[0];// user

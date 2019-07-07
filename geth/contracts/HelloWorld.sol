@@ -3,7 +3,7 @@ pragma solidity ^0.4.18;
 contract HelloWorld {
   string message;
 
-  function HelloWorld() public{
+  constructor() public{
     message = "123";
   }
 
@@ -11,11 +11,11 @@ contract HelloWorld {
     message = myMessage;
   }
 
-  function getMessage() constant public returns(string) {
+  function getMessage() public view returns(string) {
     return message;
   }
 
-  function say() constant public returns (string) {
+  function say() public view returns (string) {
          return "Hello World!";
      }
 }
