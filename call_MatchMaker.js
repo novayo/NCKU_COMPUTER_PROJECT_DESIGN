@@ -6,7 +6,7 @@ const demo = 0;
 
 
 /*********************************************************/
-const addr = "0x3a2f8a1a5e7a42952e51f3c42fa3c4fa87c97f2b"; // Copy the contract address here
+const addr = "0xd0a4edc015a6ae98086df970ab248c2da0e5b182"; // Copy the contract address here
 /*********************************************************/
 
 
@@ -47,15 +47,15 @@ console.log(showAllInfo());
 // upDateContract();
 // addUser('INVESTOR', "施崇祐", 260000, 11, "A");
 function addDefaultUser() {
-  addUser('INVESTOR', "施崇祐", 260000, 11, "A");
-  addUser('INVESTOR', "陳姿妤", 220000, 22, "B");
-  addUser('INVESTOR', "李昱廷", 700000, 33, "B");
-  addUser('INVESTOR', "蔡英文", 250000, 11, "B");
-  addUser('INVESTOR', "馬英九", 1, 11, "B");
+  addUser('INVESTOR', "施崇祐", 200000, 11, "A");
+  // addUser('INVESTOR', "陳姿妤", 220000, 22, "B");
+  // addUser('INVESTOR', "李昱廷", 700000, 33, "B");
+  // addUser('INVESTOR', "蔡英文", 250000, 11, "B");
+  // addUser('INVESTOR', "馬英九", 1, 11, "B");
   
 
   addUser('BORROWER', "法洛士", 200000, 11, "A");
-  addUser('BORROWER', "咸蛋超人", 500000, 11, "A");
+  // addUser('BORROWER', "咸蛋超人", 500000, 11, "A");
 }
 /*********************************************************/
 

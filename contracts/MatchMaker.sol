@@ -78,7 +78,7 @@ contract MatchMaker {
 		string memory Info = "";
 		uint[2] memory interest;
 		sortedUsers(true, true); // 依照利率由高到低排序好投資方跟借錢人
-		checkEqualAmount(); // 比較相等的金錢的雙方
+		Info = checkEqualAmount(); // 比較相等的金錢的雙方
 		updateCluster();
 		for (uint i = 0; i<numBorrowers; i++){
 			if (startIndex_for_borrowers[i] == 99) continue;
@@ -351,7 +351,8 @@ contract MatchMaker {
             quickSort(arr1, i, right, _id, preIndex);
     }
 
-	function checkEqualAmount() internal {
+	function checkEqualAmount() internal returns(string){
+		string memory tmpTRANSACTION = "";
 		uint interest0;
 		uint interest1;
 		for (uint i = 0; i<numBorrowers; i++){
@@ -365,13 +366,14 @@ contract MatchMaker {
 					investors[j].restAmount = 0;
 					borrowers[i].interest = 0; // 為了排序的時候會跑到最後面，因此要歸0
 					investors[j].interest = 0;
-					TRANSACTION = addInTransactionRecord(TRANSACTION, i, j, interest0, interest1);
+					tmpTRANSACTION = addInTransactionRecord(tmpTRANSACTION, i, j, interest0, interest1);
 					sortedUsers(true, true);
 					i--; // 因為這個borrower重新sorted跑到最後面了，所以同一個位置要從新弄
 					break;
 				}
 			}
 		}
+		return tmpTRANSACTION;
 	}
 
 	function updateCluster() internal {
