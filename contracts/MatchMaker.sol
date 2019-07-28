@@ -32,6 +32,8 @@ contract MatchMaker {
 	uint public DEADLINE; // 截止日期（UnixTime）
 	uint public FINISH_TIME; // 完成日期（UnixTime）
 	STATUS public status; // 募資活動的狀態
+	string newRecord = "";
+
 
 	uint public numInvestors; // 投資家數目
 	uint public numBorrowers; // 借錢家數目
@@ -51,6 +53,7 @@ contract MatchMaker {
 		status = STATUS.WAITING;
 		numInvestors = 0;
 		numBorrowers = 0;
+		newRecord = concatString(TRANSACTION, "|");
 	}
 
 	function addUserInContract (string _id, string _name, uint _totalAmount, uint _interest, uint _creditRating) public aLive{
@@ -400,7 +403,6 @@ contract MatchMaker {
 
 	// name totalAmount restAmount interest creditRating
 	function addInTransactionRecord(string input, uint i, uint j, uint interest0, uint interest1) internal view returns(string){
-		string memory newRecord = concatString(input, "|");
 		newRecord = concatString(newRecord, borrowers[i].name);newRecord = concatString(newRecord, "&");
 		newRecord = concatString(newRecord, convertIntToString(borrowers[i].totalAmount));newRecord = concatString(newRecord, "&");
 		newRecord = concatString(newRecord, convertIntToString(borrowers[i].restAmount));newRecord = concatString(newRecord, "&");
@@ -412,8 +414,8 @@ contract MatchMaker {
 		newRecord = concatString(newRecord, convertIntToString(investors[j].restAmount));newRecord = concatString(newRecord, "&");
 		newRecord = concatString(newRecord, convertIntToString(interest1));newRecord = concatString(newRecord, "&");
 		newRecord = concatString(newRecord, convertIntToString(investors[j].creditRating));
+		newRecord = concatString(newRecord, "|");
 		return newRecord;
 	}
 
 }
-
