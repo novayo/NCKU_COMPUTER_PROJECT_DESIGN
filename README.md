@@ -3,6 +3,7 @@
 
 * [Source Code](https://novayo.github.io/NCKU_COMPUTER_PROJECT_DESIGN/)
 * [Hackmd](https://hackmd.io/iqub9lj-S0ixUDCbdIl4mQ)
+* [System Documentation](https://drive.google.com/file/d/1-cgij5cn3qu3t_iRPwIMH-lFw4dS4A7N/view?usp=sharing)
 ---
 
 ## Project Folder Structure
